@@ -24,8 +24,8 @@ The reference files from Gencode are named here:
 
 ## Mapping (aln directory)
 
-Fastq files were copied to the `aln` directory, where they underwent QC analysis with fastQC and multiQC
-using the `qc.sh` script.
+Fastq files were copied to the `aln` directory, where they underwent QC analysis with fastQC v0.11.9
+and multiQC v1.12 using the `qc.sh` script.
 Next the `map.sh` script was used to coordinate the following steps:
 
 1. Quality trimming with skewer (v.0.2.2) using minimum base quality of 20.
@@ -35,9 +35,13 @@ Next the `map.sh` script was used to coordinate the following steps:
 3. Samtools conversion of SAM alignment to BAM (Samtools version 1.13) which included steps for fixing mate
 information, sorting, marking duplicate reads and indexing the bam file.
 
-4. Read counting using featurecounts v2.0.3. The tss coordinates were used.
+4. Samtools flagstat was used to get some QC information.
+
+5. Read counting using featurecounts v2.0.3. The tss coordinates were used.
 
 The output file `tss_regions.tsv` can be used for differential analysis.
+
+MultiQC v1.12 was then executed again to include the alignment QC information.
 
 ## Peak calling (peakcall directory)
 
