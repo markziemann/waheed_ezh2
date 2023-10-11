@@ -28,7 +28,7 @@ samtools index $BASE.bam
 }
 
 export -f map
-#parallel -j3 map ::: *_1.fq.gz
+parallel -j3 map ::: *_1.fq.gz
 
 
 ## Count promoter features
