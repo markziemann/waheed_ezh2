@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+## Mapping function for parallel processing
 map(){
 # set reference genome
 REF=../ref/GRCh38.primary_assembly.genome.fa
@@ -29,6 +29,16 @@ samtools index $BASE.bam
 
 export -f map
 parallel -j3 map ::: *_1.fq.gz
+
+
+## Output some statistics
+flagstat(){
+BAM=$1
+OUT=$BAM.stats
+samtools flagstat $BAM > $OUT
+}
+export -f flagstat
+parallel -j 32 flagstat ::: *bam
 
 
 ## Count promoter features
