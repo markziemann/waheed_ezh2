@@ -109,7 +109,7 @@ nl -n rz  H3K27me3.bed \
   | bedtools closest -d -a - -b ../ref/tss_regions.bed \
   | awk '!arr[$4]++' \
   | cut -f-4,10- \
-  | awk '{OFS="\t"} {print $4"|"$6"|"$5"|"$7,$1,$2,$3}' > H3K27me3.saf
+  | awk '{OFS="\t"} {print $4"|"$6"|"$5"|"$7,$1,$2,$3,"."}' > H3K27me3.saf
 
 featureCounts --countReadPairs -p -Q 20 -T 32 -F SAF -a H3K27me3.saf -o H3K27me3.tsv \
   S5.bam S13.bam S21.bam S6.bam S14.bam S22.bam S7.bam \
@@ -126,9 +126,7 @@ nl -n rz  FOS.bed \
   | bedtools closest -d -a - -b ../ref/tss_regions.bed \
   | awk '!arr[$4]++' \
   | cut -f-4,10- \
-  | awk '{OFS="\t"} {print $4"|"$6"|"$5"|"$7,$1,$2,$3}' > FOS.saf
-
-
+  | awk '{OFS="\t"} {print $4"|"$6"|"$5"|"$7,$1,$2,$3,"."}' > FOS.saf
 
 featureCounts --countReadPairs -p -Q 20 -T 32 -F SAF -a FOS.saf -o FOS.tsv \
   S5.bam S13.bam S21.bam S6.bam S14.bam S22.bam S7.bam \
