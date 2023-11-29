@@ -79,15 +79,37 @@ cat $(find . | grep FOS | grep narrowPeak) | cut -f-3 | bedtools sort | bedtools
 cat $(find . | grep H3K | grep narrowPeak) | cut -f-3 | bedtools sort | bedtools merge > H3K27me3.bed
 cat $(find . | grep FOS | grep narrowPeak) | cut -f-3 | bedtools sort | bedtools merge > FOS.bed
 
+# curate the SAF FILE
+nl -n rz  FOS.bed \
+  | sed 's/^/FOS_/' \
+  | awk '{OFS="\t"} {print $2,$3,$4,$1}' \
+  | bedtools closest -d -a - -b ../ref/tss_regions.bed \
+  | awk '!arr[$4]++' \
+  | cut -f-4,10- \
+  | awk '{OFS="\t"} {print $4"|"$6"|"$5"|"$7,$1,$2,$3}' > FOS.saf
+
+
+
+
+
+
 # multicov is crap because the columns have no headers
 #bedtools multicov -q 20 -bams S1.bam S9.bam S17.bam S2.bam S10.bam S18.bam S3.bam S11.bam S19.bam \
 # S4.bam S12.bam S20.bam S24.bam S25.bam S26.bam S28.bam -bed H3K27me3.bed > H3K27me3.tsv
 #bedtools multicov -q 20 -bams S5.bam S13.bam S21.bam S6.bam S14.bam S22.bam S7.bam S15.bam S23.bam \
 #  S8.bam S16.bam S23.bam -bed FOS.bed > FOS.tsv
 
+
 ################## FEATURECOUNTS ##################
 ## H3K27me3
-nl -n ln H3K27me3.bed | sed 's/^/H3K27me3_/' | sed 's/$/\t\./' > H3K27me3.saf
+# curate the SAF FILE
+nl -n rz  H3K27me3.bed \
+  | sed 's/^/H3K27me3_/' \
+  | awk '{OFS="\t"} {print $2,$3,$4,$1}' \
+  | bedtools closest -d -a - -b ../ref/tss_regions.bed \
+  | awk '!arr[$4]++' \
+  | cut -f-4,10- \
+  | awk '{OFS="\t"} {print $4"|"$6"|"$5"|"$7,$1,$2,$3}' > H3K27me3.saf
 
 featureCounts --countReadPairs -p -Q 20 -T 32 -F SAF -a H3K27me3.saf -o H3K27me3.tsv \
   S5.bam S13.bam S21.bam S6.bam S14.bam S22.bam S7.bam \
@@ -97,7 +119,16 @@ sed 1d H3K27me3.tsv | tr -d ' ' | sed 's/\t/|/' | sed 's/\t/|/' | sed 's/\t/|/' 
   | sed 's/\t/|/' | sed 's/\t/|/' > tmp && mv tmp H3K27me3.tsv
 
 ## FOS
-nl -n ln FOS.bed | sed 's/^/FOS_/' | sed 's/$/\t\./' > FOS.saf
+# curate the SAF FILE
+nl -n rz  FOS.bed \
+  | sed 's/^/FOS_/' \
+  | awk '{OFS="\t"} {print $2,$3,$4,$1}' \
+  | bedtools closest -d -a - -b ../ref/tss_regions.bed \
+  | awk '!arr[$4]++' \
+  | cut -f-4,10- \
+  | awk '{OFS="\t"} {print $4"|"$6"|"$5"|"$7,$1,$2,$3}' > FOS.saf
+
+
 
 featureCounts --countReadPairs -p -Q 20 -T 32 -F SAF -a FOS.saf -o FOS.tsv \
   S5.bam S13.bam S21.bam S6.bam S14.bam S22.bam S7.bam \
