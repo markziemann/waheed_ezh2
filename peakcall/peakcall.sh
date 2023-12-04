@@ -113,7 +113,8 @@ nl -n rz  H3K27me3.bed \
 
 featureCounts --countReadPairs -p -Q 20 -T 32 -F SAF -a H3K27me3.saf -o H3K27me3.tsv \
   S5.bam S13.bam S21.bam S6.bam S14.bam S22.bam S7.bam \
-  S15.bam S23.bam S8.bam S16.bam S23.bam
+  S15.bam S23.bam S8.bam S16.bam S23.bam \
+  S24.bam S25.bam S26.bam S28.bam
 
 sed 1d H3K27me3.tsv | tr -d ' ' | sed 's/\t/|/' | sed 's/\t/|/' | sed 's/\t/|/' \
   | sed 's/\t/|/' | sed 's/\t/|/' > tmp && mv tmp H3K27me3.tsv
@@ -130,7 +131,8 @@ nl -n rz  FOS.bed \
 
 featureCounts --countReadPairs -p -Q 20 -T 32 -F SAF -a FOS.saf -o FOS.tsv \
   S5.bam S13.bam S21.bam S6.bam S14.bam S22.bam S7.bam \
-  S15.bam S23.bam S8.bam S16.bam S23.bam
+  S15.bam S23.bam S8.bam S16.bam S23.bam \
+  S24.bam S25.bam S26.bam S28.bam
 
 sed 1d FOS.tsv | tr -d ' ' | sed 's/\t/|/' | sed 's/\t/|/' | sed 's/\t/|/' \
   | sed 's/\t/|/' | sed 's/\t/|/' > tmp && mv tmp FOS.tsv
