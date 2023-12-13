@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Input S24 S25 S26 S28
+# H3K27me3  S1 S9 S17 S2 S10 S18 S3 S11 S19 S4 S12 S20
+# FOS S5 S13 S21 S6 S14 S22 S7 S15 S23 S8 S16 S24
+
 ################## H3K27me3 ################## S1 S9 S17 S2 S10 S18 S3 S11 S19 S4 S12 S20
 # untreated
 macs2 callpeak -t S1.bam -c S24.bam --outdir S1_H3K27me3_peak -n S1_H3K27me3_macs &
@@ -88,11 +92,6 @@ nl -n rz  FOS.bed \
   | cut -f-4,10- \
   | awk '{OFS="\t"} {print $4"|"$6"|"$5"|"$7,$1,$2,$3}' > FOS.saf
 
-
-
-
-
-
 # multicov is crap because the columns have no headers
 #bedtools multicov -q 20 -bams S1.bam S9.bam S17.bam S2.bam S10.bam S18.bam S3.bam S11.bam S19.bam \
 # S4.bam S12.bam S20.bam S24.bam S25.bam S26.bam S28.bam -bed H3K27me3.bed > H3K27me3.tsv
@@ -111,10 +110,12 @@ nl -n rz  H3K27me3.bed \
   | cut -f-4,10- \
   | awk '{OFS="\t"} {print $4"|"$6"|"$5"|"$7,$1,$2,$3,"."}' > H3K27me3.saf
 
+
+# Input S24 S25 S26 S28
+# H3K27me3  S1 S9 S17 S2 S10 S18 S3 S11 S19 S4 S12 S20
 featureCounts --countReadPairs -p -Q 20 -T 32 -F SAF -a H3K27me3.saf -o H3K27me3.tsv \
-  S5.bam S13.bam S21.bam S6.bam S14.bam S22.bam S7.bam \
-  S15.bam S23.bam S8.bam S16.bam S23.bam \
-  S24.bam S25.bam S26.bam S28.bam
+  S24.bam S25.bam S28.bam \
+  S1.bam S9.bam S17.bam S2.bam S10.bam S18.bam S3.bam S11.bam S19.bam S4.bam S12.bam S20.bam
 
 sed 1d H3K27me3.tsv | tr -d ' ' | sed 's/\t/|/' | sed 's/\t/|/' | sed 's/\t/|/' \
   | sed 's/\t/|/' | sed 's/\t/|/' > tmp && mv tmp H3K27me3.tsv
@@ -129,10 +130,11 @@ nl -n rz  FOS.bed \
   | cut -f-4,10- \
   | awk '{OFS="\t"} {print $4"|"$6"|"$5"|"$7,$1,$2,$3,"."}' > FOS.saf
 
+# Input S24 S25 S26 S28
+# FOS S5 S13 S21 S6 S14 S22 S7 S15 S23 S8 S16 S24
 featureCounts --countReadPairs -p -Q 20 -T 32 -F SAF -a FOS.saf -o FOS.tsv \
-  S5.bam S13.bam S21.bam S6.bam S14.bam S22.bam S7.bam \
-  S15.bam S23.bam S8.bam S16.bam S23.bam \
-  S24.bam S25.bam S26.bam S28.bam
+  S24.bam S25.bam S26.bam S28.bam \
+  S5.bam S13.bam S21.bam S6.bam S14.bam S22.bam S7.bam S15.bam S23.bam S8.bam S16.bam S24.bam
 
 sed 1d FOS.tsv | tr -d ' ' | sed 's/\t/|/' | sed 's/\t/|/' | sed 's/\t/|/' \
   | sed 's/\t/|/' | sed 's/\t/|/' > tmp && mv tmp FOS.tsv
